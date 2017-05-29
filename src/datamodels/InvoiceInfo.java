@@ -7,8 +7,6 @@ package datamodels;
 
 //由于意义不是很明确暂时 使用key来表示,以后可以refactor
 public class InvoiceInfo {
-    //11 key
-    private InvoiceRequestInfo invoiceRequestInfo;
     private String key1;
     private String key2;
     private String key3;
@@ -22,7 +20,6 @@ public class InvoiceInfo {
     private String rules;
 
     public InvoiceInfo(InvoiceRequestInfo invoiceRequestInfo) {
-        this.invoiceRequestInfo = invoiceRequestInfo;
     }
 
     //由于意义不是很明确暂时 使用key来表示,以后可以refactor

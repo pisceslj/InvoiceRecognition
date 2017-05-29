@@ -1,17 +1,11 @@
 package com.security.imageuploadserver;
 
 import java.net.ServerSocket;
-//import java.util.concurrent.ExecutorService;
-//import java.util.concurrent.Executors;
 import java.io.IOException;
 import java.net.Socket;
-//import javax.servlet.ServletContextEvent;
-//import javax.servlet.ServletContextListener;
 
 public class SocketThread extends Thread{
 	private ServerSocket serverSocket = null;
-	//private ExecutorService threadPool;//线程池
-	//private SocketThread socketThread;
 	
 	public SocketThread(ServerSocket serverSocket) {
 		try {
@@ -28,7 +22,6 @@ public class SocketThread extends Thread{
 	
 	//监听线程
 	public void run(){
-		//threadPool = Executors.newCachedThreadPool();
 		System.out.println("欢迎使用财务报销系统，服务器启动");
 		
 		while(!this.isInterrupted()){ 
@@ -37,8 +30,6 @@ public class SocketThread extends Thread{
 				
 				if(null != socket && !socket.isClosed())
 				{
-					//SocketOperate task = new SocketOperate(socket).start();//收到请求执行一个task
-					//threadPool.execute(task);     //线程池里执行一个task
 					new SocketOperate(socket).start();
 				}
 				socket.setSoTimeout(30000);

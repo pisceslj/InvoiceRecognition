@@ -1,12 +1,11 @@
 package com.security.imageuploadserver;
 
-//import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
  * 将socketListener随tomcat启动
- * @author DELL
+ * @author lujie
  *
  */
 public class SocketListener implements ServletContextListener{

@@ -75,19 +75,7 @@ public class CutLittleNumber {
 					}
 				}
 			}
-		/*	for(int i=0;i<hang;i++){
-				for(int j=0;j<lie;j++)
-				{
-					if(b[i][j] == 0)System.out.print(b[i][j]);
-					else System.out.print(" ");
-				}
-				System.out.println();
-			}*/
-			
-			//System.out.println();
-			
 		}
-		
 		
 		public static int[][][] cutImage(int[][] b,int hang,int lie)
 		{//将图片裁剪成单个数字
@@ -112,7 +100,6 @@ public class CutLittleNumber {
 				if(count==lie&&flag==1)
 				{
 					hangcut=i+1;
-					//System.out.println(hangcut);
 					break;
 				}
 				else
@@ -135,7 +122,6 @@ public class CutLittleNumber {
 				if(count==hangcut&&flag==1)
 				{
 					liecut1[k]=j+1;
-					//System.out.println(liecut1[k]);
 					k++;
 					num1++;
 					flag=0;
@@ -159,7 +145,6 @@ public class CutLittleNumber {
 				if(count==(hang-hangcut)&&flag==1)
 				{
 					liecut2[k]=j+1;
-					//System.out.println(liecut2[k]);
 					num2++;
 					k++;
 					flag=0;
@@ -180,7 +165,6 @@ public class CutLittleNumber {
 					for(int j=liecut1[k];j<liecut1[k+1];j++)
 					{
 						cut[k][i][j]=b[i][j];
-						//System.out.print(cut[k][i][j]);
 					}
 				}
 			}
@@ -192,7 +176,6 @@ public class CutLittleNumber {
 					for(int j=liecut2[k];j<liecut2[k+1];j++)
 					{
 						cut[k+num1-1][i][j]=b[i][j];
-						//System.out.print(cut[k+num1-1][i][j]);
 					}
 				}
 			}

@@ -1,9 +1,7 @@
 package com.imageHandle;
 
 import java.awt.Color;  
-import java.awt.color.ColorSpace;  
-import java.awt.image.BufferedImage;  
-import java.awt.image.ColorConvertOp;  
+import java.awt.image.BufferedImage;   
 import java.io.File;    
 import java.io.IOException;    
 import javax.imageio.ImageIO;    
@@ -18,8 +16,6 @@ public class ClearImageHelper {
      * @throws IOException 
      */  
     public static void cleanImage(File sfile, String destDir)throws IOException{  
-   
-  
         BufferedImage bufferedImage = ImageIO.read(sfile);  
         int h = bufferedImage.getHeight();  
         int w = bufferedImage.getWidth();  
@@ -61,18 +57,6 @@ public class ClearImageHelper {
             }  
         }  
   
-        // 矩阵打印  
-  /*      for (int y = 0; y < h; y++){  
-            for (int x = 0; x < w; x++){  
-                if (isBlack(binaryBufferedImage.getRGB(x, y))){  
-                    System.out.print("*");  
-                } else{  
-                    System.out.print(" ");  
-                }  
-            }  
-            System.out.println();  
-        }  
-        */
         ImageIO.write(binaryBufferedImage, "jpg", new File(destDir));  
     }  
   

@@ -20,10 +20,12 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.*;
 import java.text.*;
+
 import com.crypto.MyServer;
 import com.db.JdbcUtil;
 import com.open.test.JavaInvokeCpp;
 import com.imageHandle.ClearImageHelper;
+
 import static util.LogRecord.logger;
 import datamodels.AnlynasResult;
 import datamodels.VerficationCodeInfo;
@@ -31,13 +33,10 @@ import datamodels.VerficationCodeResult;
 
 public class SocketOperate extends Thread implements Runnable{
 	private static Integer invoicePicNum = 0;//发票图片序号
-	//private static Integer captchasPicNum = 0;//验证码图片序号
 	private Socket socket;
 	BufferedReader in = null;
 	PrintWriter out = null;
 	MyServer S = null;
-	//private final String  invoiceDir = "/home/image/";  //发票存储目录
-	//private final String  captchasDir = "F://Helios//data//captchas_image//";
 	private final String  invoiceDir = "D:\\image\\";
 	private final String  cutImageDir = "H:\\Software\\eclipse-jee-kepler-SR2-win32-x86_64\\eclipse\\";
 	
@@ -56,7 +55,7 @@ public class SocketOperate extends Thread implements Runnable{
 		PreparedStatement pstmt1 = null;
 		PreparedStatement pstmt2 = null;
 		ResultSet resultSet = null;
-		String invoiceInfo[] = new String[20];//发票信息包括发票代码、发票号码、发票密码
+		String invoiceAllInfo[] = new String[20];//发票信息包括发票代码、发票号码、发票密码
 		String[] invoiceResult = null;//识别结果
 		String username = null;
 		String password = null;
@@ -88,41 +87,46 @@ public class SocketOperate extends Thread implements Runnable{
     	    
     	    String checkCode;//校验码
 
-    	    invoiceInfo = doOCRInvoice(invoicePicFilename);//识别发票的函数
+    	    invoiceAllInfo = doOCRInvoice(invoicePicFilename);//识别发票的函数
     	    //invoiceInfo = doOCRInvoice(invoiceDealFilename);
-    	    logger.info("发票code为："+invoiceInfo[0]);
-    	    logger.info("发票number为："+invoiceInfo[2]);
-    	    logger.info("发票checkcode1为："+invoiceInfo[4]);
-    	    logger.info("发票checkcode2为："+invoiceInfo[6]);
+    	    logger.info("发票code为："+invoiceAllInfo[0]);
+    	    logger.info("发票number为："+invoiceAllInfo[2]);
+    	    logger.info("发票checkcode1为："+invoiceAllInfo[4]);
+    	    logger.info("发票checkcode2为："+invoiceAllInfo[6]);
     	    
-    	    invoiceInfo[8] = invoiceInfo[8].substring(0, 4) + invoiceInfo[8].substring(6, 8) + invoiceInfo[8].substring(10, 12);
-    	    logger.info("发票date为："+invoiceInfo[8]);
+    	    invoiceAllInfo[8] = invoiceAllInfo[8].substring(0, 4) + invoiceAllInfo[8].substring(6, 8) + invoiceAllInfo[8].substring(10, 12);
+    	    logger.info("发票date为："+invoiceAllInfo[8]);
     	    
-    	    checkCode = invoiceInfo[4].substring(4);
-    	    invoiceInfo[4] = checkCode + invoiceInfo[6];
-    	    logger.info("校验码为："+invoiceInfo[4]);
+    	    checkCode = invoiceAllInfo[4].substring(4);
+    	    invoiceAllInfo[4] = checkCode + invoiceAllInfo[6];
+    	    logger.info("校验码为："+invoiceAllInfo[4]);
     	  
-    	    if(invoiceInfo != null){
-    	    	invoiceResult = postCheckInvoice(invoiceInfo);//送往接口验证的函数
+    	    if(invoiceAllInfo != null){
+    	    	invoiceResult = postCheckInvoice(invoiceAllInfo);//送往接口验证的函数
     	    }
 		}catch (Exception e){
-				e.printStackTrace();
+				logger.info("[INFO]========== working ok");
 			}
 		
 		/**
-		 * @author DELL
+		 * @author lujie
+		 * compare information and return result to client
+		 */
+		
+		/**
+		 * @author lujie
 		 * insert invoiceInfo into the mysql
 		 */
-		try {
+		/*try {
 			//调用工具类中的静态方法来获取连接
 			connection = JdbcUtil.getConnection();
 			String sql1 = "insert into ess_ugp_invoiceinfo (userid,code,number,checkcode,date,uploadtime,pass,operatetime) values(?,?,?,?,?,?,?,?)";
 			pstmt1 = connection.prepareStatement(sql1);
 			pstmt1.setString(1,username);
-			pstmt1.setString(2,invoiceInfo[2]);
-			pstmt1.setString(3,invoiceInfo[0]);
-			pstmt1.setString(4,invoiceInfo[4]);
-			pstmt1.setString(5,invoiceInfo[8]);
+			pstmt1.setString(2,invoiceAllInfo[2]);
+			pstmt1.setString(3,invoiceAllInfo[0]);
+			pstmt1.setString(4,invoiceAllInfo[4]);
+			pstmt1.setString(5,invoiceAllInfo[8]);
 			pstmt1.setString(6,time);
 			pstmt1.setInt(7,0);
 			pstmt1.setString(8,time);
@@ -145,45 +149,44 @@ public class SocketOperate extends Thread implements Runnable{
 			pstmt2.setString(9,invoiceResult[7]);
 			pstmt2.setString(10,invoiceResult[8]);
 			int result2 = pstmt2.executeUpdate();
-			if(result2 == 1)*/
+			if(result2 == 1)
 				 logger.info("[INFO]========== insert invoiceResult ok");
-			//else
-				 //logger.info("[INFO]========== insert invoiceResult failed");
+			else
+				 logger.info("[INFO]========== insert invoiceResult failed");
 		}catch (Exception e){
 			e.printStackTrace();
 		}finally{
 			JdbcUtil.releaseConn(connection, statement, resultSet);
-		}
+		}*/
 		logger.info("[INFO]========== finish verify");
     }
 
 	
 	/**
+	 * @author xiuxian
 	 * @param invoiceInfo 
 	 * 将验证码发送给用户，并获取返回的输入值
 	 * @throws Exception 
 	 */
-	private String[] postCheckInvoice(String[] invoiceInfo) throws Exception{
+	private String[] postCheckInvoice(String[] invoiceAllInfo) throws Exception{
 		verifyImage m = new verifyImage();
-		String[] bArray = m.requestVercifationCodeHandler(invoiceInfo);
+		String[] bArray = m.requestVercifationCodeHandler(invoiceAllInfo);
 		String s = null;
 		String[] ResultArray = null;
+		String[] infosArray = null; 
 		if(bArray != null)
 		{
-			//
-			//这里可以进行传输验证码操作
 			//验证码字符流为bArray
-			//
 			S.SendCAPTCHA(out,bArray[0]);
 			S.SendCAPTCHA(out,bArray[1]);
 			s = S.GetCAPTCHA(in);
 			logger.info("[INFO]========== checkcode is: "+s);
 			//验证发票真伪
-			String[] infosArray = m.commitHandler(invoiceInfo, s);
-			/*AnlynasResult result = new AnlynasResult();
-			ResultArray = result.handle(infosArray);*/
-			
-	    	//System.out.println(s);
+			//
+			//infosArray = m.commitHandler(invoiceAllInfo, s);
+			m.commitHandler(invoiceAllInfo, s);
+			//AnlynasResult result = new AnlynasResult();
+			//ResultArray = result.handle(infosArray);
 		}
 		return ResultArray;
 	}
@@ -315,7 +318,7 @@ public class SocketOperate extends Thread implements Runnable{
         frCheckcode1.close();
         frCheckcode2.close();
         frDate.close();
-        logger.info("OCR识别结果："+invoiceInfo[0]+" "+invoiceInfo[1]+" "+invoiceInfo[2]+" "+invoiceInfo[3]+" "+invoiceInfo[4]);
+        logger.info("OCR识别结果："+invoiceInfo[0]+" "+invoiceInfo[2]+" "+invoiceInfo[4]+" "+invoiceInfo[6]+" "+invoiceInfo[8]);
 		return invoiceInfo;
 	}
 	

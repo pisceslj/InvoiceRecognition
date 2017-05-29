@@ -1,6 +1,5 @@
 package datamodels;
 
-import org.apache.http.client.utils.URIUtils;
 
 /**
  * Created by mac on 2017/3/27.

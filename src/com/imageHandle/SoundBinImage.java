@@ -59,8 +59,7 @@ public class SoundBinImage {
 			e.printStackTrace();
 		}
 	}
-	private int abs(int i) {
+	/*private int abs(int i) {
 		return i>0?i:-i;
-		// TODO Auto-generated method stub
-	}
+	}*/
 }

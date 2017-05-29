@@ -241,16 +241,7 @@ public class NumberOCR {
 					}
 				}
 			}
-			/*	for(int i=0;i<hang;i++){
-				for(int j=0;j<lie;j++)
-				{
-					if(b[i][j] == 0)System.out.print(" ");
-					else System.out.print(1);
-				}
-				System.out.println();
-			}
 			
-			System.out.println();*/
 			return b;	
 		}
 		
@@ -265,7 +256,6 @@ public class NumberOCR {
 				for(int i=0;i<width;i++){
 					for(int j=0;j<height;j++){	
 						raster.getPixel(i, j, a);
-						//System.out.println("("+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+")");
 						if((a[0]+a[1]+a[2])/3>Threshold){
 							a[0]=255;
 							a[1]=255;
@@ -313,7 +303,6 @@ public class NumberOCR {
 				if(count==lie&&flag==1)
 				{
 					hangcut=i+1;
-					//System.out.println(hangcut);
 					break;
 				}
 				else
@@ -335,7 +324,6 @@ public class NumberOCR {
 				if(count==hangcut&&flag==1)
 				{
 					liecut1[k]=j+1;
-					//System.out.println(liecut1[k]);
 					k++;
 					num1++;
 					flag=0;
@@ -360,7 +348,6 @@ public class NumberOCR {
 				if(count==(hang-hangcut)&&flag==1)
 				{
 					liecut2[k]=j+1;
-					//System.out.println(liecut2[k]);
 					k++;
 					num2++;
 					flag=0;
@@ -388,7 +375,6 @@ public class NumberOCR {
 				ocrResult[0][k] = ExtractNumber(cut[k],hangcut,liecut1[k+1]-liecut1[k]);		
 			}
 			k=0;
-			//System.out.println("开始识别第二行");
 			for(;k<num2;k++)
 			{
 				for(int i=hangcut;i<hang;i++)
@@ -400,52 +386,6 @@ public class NumberOCR {
 					
 			}
 				ocrResult[1][k] = ExtractNumber(cut[k+num1],hang-hangcut,liecut2[k+1]-liecut2[k]);
-			}
-			return ocrResult;
-		}
-		
-		private static int[] CutImageDoOCRPassword(int[][] b,
-				int hang, int lie) {
-			// TODO Auto-generated method stub
-			int num1=0;
-			int[] liecut1=new int[50];
-			liecut1[0]=0;
-			int k=1,flag=0,count=0;
-
-			flag=0;
-			for(int j=0;j<lie;j++)
-			{
-			for(int i=0;i<hang;i++)			
-				{
-					if(b[i][j]==1)
-						flag=1;
-					else
-						count++;
-				}
-				if(count==hang&&flag==1)
-				{
-					liecut1[k]=j+1;
-					//System.out.println(liecut1[k]);
-					k++;
-					num1++;
-					flag=0;
-				}
-				else
-					count=0;
-			}
-			k=0;
-			int[][][] cut=new int[num1][hang][lie];
-			int[] ocrResult = new int [50];
-			for(;k<num1;k++)
-			{
-				for(int i=0;i<hang;i++)
-				{
-					for(int j=liecut1[k];j<liecut1[k+1];j++)
-					{
-					    cut[k][i][j-liecut1[k]]=b[i][j];
-					}
-				}
-				ocrResult[k] = ExtractNumber(cut[k],hang,liecut1[k+1]-liecut1[k]);		
 			}
 			return ocrResult;
 		}

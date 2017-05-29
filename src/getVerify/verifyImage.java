@@ -20,33 +20,43 @@ public class verifyImage implements IGetForInvoiceType {
     private VerficationCodeInfo verficationCodeInfo;
 
     //进行发票真伪验证
-    @SuppressWarnings("static-access")
-	public String[] commitHandler(String[] invoiceInfo, String verifyCode) {
+	//public String[] commitHandler(String[] invoiceAllInfo, String verifyCode) {
+    public void commitHandler(String[] invoiceAllInfo, String verifyCode) {
         logger.info("[INFO]========== enter commit handler");
         // check not null
-        if (verficationCodeInfo == null)
-        	return null;
-        if (verifyCode == null)
-        	return null;
-        if (invoiceInfo == null)
-            return null;
-        if (invoiceInfo[0] == null)
-            return null;
-        if (invoiceInfo[2] == null)
-            return null;
-        if (invoiceInfo[4] == null)
-            return null;
-        if (invoiceInfo[8] == null)
-            return null;
+        if (verficationCodeInfo == null){
+        	//logger.info("[INFO]=========verifycationCodeInfo is empty");
+        	return;
+        }
+        if (verifyCode == null) {
+        	//logger.info("[INFO]=========verifyCode is empty");
+        	return;
+        }
+        if (invoiceAllInfo[0] == null) {
+        	//logger.info("[INFO]=========invoiceAllInfo[0] is empty");
+        	return;
+        }
+        if (invoiceAllInfo[2] == null){
+        	//logger.info("[INFO]=========invoiceAllInfo[2] is empty");
+        	return;
+        }
+        if (invoiceAllInfo[4] == null){
+        	//logger.info("[INFO]=========invoiceAllInfo[4] is empty");
+        	return;
+        }
+        if (invoiceAllInfo[8] == null){
+        	//logger.info("[INFO]=========invoiceAllInfo[8] is empty");
+        	return;
+        }
         if (invoiceType == null)
-            invoiceType = getForInvoiceType(invoiceInfo[2]);
+            invoiceType = getForInvoiceType(invoiceAllInfo[2]);
 
         //1.data
         verficationCodeResult = new VerficationCodeResult(verficationCodeInfo, verifyCode);
-        InvoiceInputInfo invoiceInputInfo = new InvoiceInputInfo(invoiceInfo[2]
-                , invoiceInfo[0]
-                , invoiceInfo[8]
-                , invoiceInfo[4]);
+        InvoiceInputInfo invoiceInputInfo = new InvoiceInputInfo(invoiceAllInfo[2]
+                , invoiceAllInfo[0]
+                , invoiceAllInfo[8]
+                , invoiceAllInfo[4]);
         InvoiceRequestInfo invoiceRequestInfo = new InvoiceRequestInfo(invoiceType, invoiceInputInfo, verficationCodeResult);
 
         //2.HTTP GET
@@ -57,11 +67,14 @@ public class verifyImage implements IGetForInvoiceType {
         URI uri = provinceURL.getProvinceURL();
 
         if (uri == null)
-            return null;
-        logger.info("[INFO]==========got url ok");
+        {
+        	//logger.info("[INFO]==========uri is empty");
+        	return;
+        }
+        logger.info("[INFO]==========got url ="+uri);
         //(3)make response handler
         ResponseHandler<InvoiceInfo> rs = new InvoiceHandler();
-        logger.info("[INFO]==========make handler ok ");
+        logger.info("[INFO]==========rs = "+rs);
         //(4)exec http
         InvoiceInfo invoiceInfos = httpManager.httpProcess(uri, rs);
         logger.info("[INFO]========== exec http ok");
@@ -69,7 +82,7 @@ public class verifyImage implements IGetForInvoiceType {
         InvoiceResult invoiceResult = new InvoiceParase().getInvoiceResult(invoiceInfos);
 
         /*logger.info("[INFO]========== RESULT");
-        logger.info("[INFO]========== invoiceInfos2 = "+invoiceInfos.getKey1());
+        logger.info("[INFO]========== invoiceInfos1 = "+invoiceInfos.getKey1());
         logger.info("[INFO]========== invoiceInfos2 = "+invoiceInfos.getKey2());
         logger.info("[INFO]========== invoiceInfos3 = "+invoiceInfos.getKey3());
         logger.info("[INFO]========== invoiceInfos4 = "+invoiceInfos.getKey4());
@@ -81,26 +94,37 @@ public class verifyImage implements IGetForInvoiceType {
         logger.info("[INFO]========== invoiceInfos8 = "+invoiceInfos.getKey10());
         logger.info("getTaxpayerNumber = "+invoiceResult.getTaxpayerNumber());*/
         
-        String[] invoiceInfoArray = new String[3];
+        logger.info("[INFO]========== RESULT");
+        logger.info("[INFO]========== invoiceInfos1 = 001");
+        logger.info("[INFO]========== invoiceInfos2 = 深圳市南山区前海路1068号心语雅园B座1005 13923767170▽26▽20161208▽22030500DK00800▽000000▽ ▽ ▽79508914674032685135▽ ▽-279.0▽▽-284.48▽ ▽电子科技大学▽深圳市南山区国家税务局代开五十五");
+        logger.info("[INFO]========== invoiceInfos3 = 朗□宇□无□刷□电□机□█A2212KV980█个█4█45.6311█182.52█3█5.48");
+        logger.info("[INFO]========== invoiceInfos4 = ");
+        logger.info("[INFO]========== invoiceInfos5 = var fpxx=fpdm+'≡'+fphm+'≡'+swjgmc+'≡'+jsonData.key2+'≡'+yzmSj");
+        logger.info("[INFO]========== invoiceInfos6 = var result= template:0,fplx:fplx,fpxx:fpxx,hwxx:hwxx,jmbz:jmbz,sort:jmsort");
+        logger.info("[INFO]========== invoiceInfos7 = 904e4c73b7d772c04f0f2487e78b787f");
+        logger.info("[INFO]========== invoiceInfos8 = 21dd6b94f26ca076d52770a0f85c5954");
+        logger.info("[INFO]========== invoiceInfos9 =  62661464259f48349753fcf58610202a");
+        logger.info("[INFO]========== invoiceInfos10 = NIuJfyVh3MK3euMa1CfjCaUX0Md/AOmH6TB9BgaL543yFNwSvY55Yu1dunf3r7oN");
+        logger.info("getTaxpayerNumber = 44030500DK00600");
+        
+        /*String[] invoiceInfoArray = new String[3];
         invoiceInfoArray[0] = invoiceInfos.getKey2();
         invoiceInfoArray[1] = invoiceInfos.getKey3();
-        invoiceInfoArray[2] = invoiceResult.getTaxpayerNumber();
+        invoiceInfoArray[2] = invoiceResult.getTaxpayerNumber();*/
 
         //此处我觉得需要将结果返回客户端
         logger.info("[INFO]========== COMMIT FINISHED");
         
-        return invoiceInfoArray;
+        //return invoiceInfoArray;
     }
 
     //获取验证码图片
-    //
-    //@SuppressWarnings("static-access")
-	public String[] requestVercifationCodeHandler(String[] invoiceInfo) {
+	public String[] requestVercifationCodeHandler(String[] Infos) {
         //启动httpmanager
         HttpManager httpManager = HttpManager.getInstance();
         
         //获取对应省份税务局的url
-        VerficationCodeRequestInfo vcq = new VerficationCodeRequestInfo(invoiceInfo[2]);
+        VerficationCodeRequestInfo vcq = new VerficationCodeRequestInfo(Infos[2]);
         IProvinceURL provinceURL = new GetVerficationCodeURL(vcq);
         URI uri = provinceURL.getProvinceURL();
         if(uri == null)
@@ -110,7 +134,6 @@ public class verifyImage implements IGetForInvoiceType {
         ResponseHandler<VerficationCodeInfo> rs = new VerficationCodeHandler(vcq);
 
         //执行http请求
-        @SuppressWarnings("static-access")
 		VerficationCodeInfo vci = httpManager.httpProcess(uri, rs);
         this.verficationCodeInfo = vci;
 

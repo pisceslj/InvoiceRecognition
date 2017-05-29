@@ -58,10 +58,6 @@ public class HttpManager {
         }
     }
 
-
-
-
-
     private HttpManager() {
     }
 

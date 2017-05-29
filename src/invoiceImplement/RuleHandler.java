@@ -20,7 +20,6 @@ import static util.LogRecord.logger;
  */
 public class RuleHandler implements ResponseHandler<String[]> {
 
-
     @Override
     public String[] handleResponse(HttpResponse httpResponse) throws ClientProtocolException, IOException {
         logger.info("[INFO]========== START HANDLER RESPONSE");
@@ -34,7 +33,6 @@ public class RuleHandler implements ResponseHandler<String[]> {
                 throw new ClientProtocolException("Response contains no content");
             }
 
-
             //ContentType contentType = ContentType.getOrDefault(entity);
             //Charset charset = contentType.getCharset();
 
@@ -45,7 +43,6 @@ public class RuleHandler implements ResponseHandler<String[]> {
                 logger.warning("[warning]========== RESPONSE ENTITY CONTENT ERROR");
                 e.printStackTrace();
             }
-
 
             StringBuffer contentStr = new StringBuffer();
             char[] buffer = new char[20];
@@ -70,7 +67,7 @@ public class RuleHandler implements ResponseHandler<String[]> {
             String rules = matcher.group(1);
             logger.info("[INFO]========== rules is " + rules);
             String[] rs = rules.split("☺");
-            logger.info("[INFO]========== rules[] is " + rs[0] + " " + rs[1]);
+            //logger.info("[INFO]========== rules[] is " + rs[0] + " " + rs[1]);
             return rs;
 
         }
