@@ -40,7 +40,7 @@ public class Negotiator{
     ECPoint RB;
     ECPoint U_V;
     public String KKK = ""; 
-	//@SuppressWarnings("deprecation")
+	
 	public Negotiator()   
     {
 			
@@ -82,7 +82,7 @@ public class Negotiator{
 	    sm3.update(msg1, 0, msg1.length);  
 	    sm3.doFinal(md, 0);  
 	    String re = new String(Hex.encode(md)); 
-	    //System.out.println(re.toUpperCase());
+	  
 	    return re;
 	}
 	public static ECPoint  ECMutiply(ECPoint ECP,String integer)
@@ -90,9 +90,9 @@ public class Negotiator{
 	    BigInteger k =new BigInteger(integer, 16);
 	    ECPoint ECP_k = ECP.multiply(k).normalize();
 	    byte[] Buffer = ECP_k.getXCoord().getEncoded();
-	    //SM02.printHexString(Buffer);
+	    
 	    Buffer = ECP_k.getYCoord().getEncoded();
-	    //SM02.printHexString(Buffer);
+	   
 	    return ECP_k;
 	    
 	}
@@ -104,7 +104,7 @@ public class Negotiator{
     	BigInteger one_127_sub1 = one_127.subtract(one); 
         BigInteger x_int =(x.and(one_127_sub1)).add(one_127);
     	String p = new String(Hex.encode(x_int.toByteArray()));
-    	//System.out.println(p);
+    	
     	return x_int;
 	}
 	public static ECPoint GetECPoint(BigInteger x,BigInteger y)

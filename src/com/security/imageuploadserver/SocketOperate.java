@@ -1,6 +1,4 @@
 package com.security.imageuploadserver;
-import static util.LogRecord.logger;
-import getVerify.verifyImage;
 
 import java.net.Socket;
 import java.io.BufferedReader;
@@ -9,11 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-
-import com.imageHandle.OperateImage;
-import com.imageHandle.SoundBinImage;
-import com.open.test.JavaInvokeCpp;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -23,13 +16,14 @@ import java.text.*;
 
 import com.crypto.MyServer;
 import com.db.JdbcUtil;
-import com.open.test.JavaInvokeCpp;
 import com.imageHandle.ClearImageHelper;
+import com.imageHandle.OperateImage;
+import com.imageHandle.SoundBinImage;
+import com.open.test.JavaInvokeCpp;
 
-import static util.LogRecord.logger;
 import datamodels.AnlynasResult;
-import datamodels.VerficationCodeInfo;
-import datamodels.VerficationCodeResult;
+import static util.LogRecord.logger;
+import getVerify.verifyImage;
 
 public class SocketOperate extends Thread implements Runnable{
 	private static Integer invoicePicNum = 0;//发票图片序号
@@ -44,6 +38,10 @@ public class SocketOperate extends Thread implements Runnable{
 		this.socket = socket;
 	}
 	
+	/**
+	 * @author lujie
+	 * @description 开始执行图片处理，分割，识别；发票信息验证操作
+	 */
 	public void run(){
 		String invoicePicFilename = invoiceDir+"invoice_image_";
 		invoicePicFilename += invoicePicNum+".jpg";
@@ -88,7 +86,6 @@ public class SocketOperate extends Thread implements Runnable{
     	    String checkCode;//校验码
 
     	    invoiceAllInfo = doOCRInvoice(invoicePicFilename);//识别发票的函数
-    	    //invoiceInfo = doOCRInvoice(invoiceDealFilename);
     	    logger.info("发票code为："+invoiceAllInfo[0]);
     	    logger.info("发票number为："+invoiceAllInfo[2]);
     	    logger.info("发票checkcode1为："+invoiceAllInfo[4]);
@@ -103,21 +100,25 @@ public class SocketOperate extends Thread implements Runnable{
     	  
     	    if(invoiceAllInfo != null){
     	    	invoiceResult = postCheckInvoice(invoiceAllInfo);//送往接口验证的函数
+    	    	logger.info("[INFO]========== invoiceResult0="+invoiceResult[0]);
+    	    	logger.info("[INFO]========== invoiceResult1="+invoiceResult[1]);
+    	    	logger.info("[INFO]========== invoiceResult2="+invoiceResult[2]);
+    	    	logger.info("[INFO]========== invoiceResult3="+invoiceResult[3]);
+    	    	logger.info("[INFO]========== invoiceResult4="+invoiceResult[4]);
+    	    	logger.info("[INFO]========== invoiceResult5="+invoiceResult[5]);
+    	    	logger.info("[INFO]========== invoiceResult6="+invoiceResult[6]);
+    	    	logger.info("[INFO]========== invoiceResult7="+invoiceResult[7]);
+    	    	logger.info("[INFO]========== invoiceResult8="+invoiceResult[8]);
     	    }
 		}catch (Exception e){
-				logger.info("[INFO]========== working ok");
+				e.printStackTrace();
 			}
 		
 		/**
 		 * @author lujie
-		 * compare information and return result to client
+		 * @description insert invoiceInfo into the mysql
 		 */
-		
-		/**
-		 * @author lujie
-		 * insert invoiceInfo into the mysql
-		 */
-		/*try {
+		try {
 			//调用工具类中的静态方法来获取连接
 			connection = JdbcUtil.getConnection();
 			String sql1 = "insert into ess_ugp_invoiceinfo (userid,code,number,checkcode,date,uploadtime,pass,operatetime) values(?,?,?,?,?,?,?,?)";
@@ -136,7 +137,7 @@ public class SocketOperate extends Thread implements Runnable{
 			else
 				 logger.info("[INFO]========== insert invoiceInfo failed");
 
-			/*String sql2 = "insert into ess_ugp_invoiceresult (userid,productname,specification,unit,account,unitprice,price,tax,taxmoney,TaxPayerNumber) values(?,?,?,?,?,?,?,?,?,?)";
+			String sql2 = "insert into ess_ugp_invoiceresult (userid,productname,specification,unit,account,unitprice,price,tax,taxmoney,TaxPayerNumber) values(?,?,?,?,?,?,?,?,?,?)";
 			pstmt2 = connection.prepareStatement(sql2);
 			pstmt2.setString(1,username);
 			pstmt2.setString(2,invoiceResult[0]);
@@ -157,7 +158,7 @@ public class SocketOperate extends Thread implements Runnable{
 			e.printStackTrace();
 		}finally{
 			JdbcUtil.releaseConn(connection, statement, resultSet);
-		}*/
+		}
 		logger.info("[INFO]========== finish verify");
     }
 
@@ -165,7 +166,7 @@ public class SocketOperate extends Thread implements Runnable{
 	/**
 	 * @author xiuxian
 	 * @param invoiceInfo 
-	 * 将验证码发送给用户，并获取返回的输入值
+	 * @description 将验证码发送给用户，并获取返回的输入值
 	 * @throws Exception 
 	 */
 	private String[] postCheckInvoice(String[] invoiceAllInfo) throws Exception{
@@ -182,12 +183,17 @@ public class SocketOperate extends Thread implements Runnable{
 			s = S.GetCAPTCHA(in);
 			logger.info("[INFO]========== checkcode is: "+s);
 			//验证发票真伪
-			//
-			//infosArray = m.commitHandler(invoiceAllInfo, s);
+			infosArray = m.commitHandler(invoiceAllInfo, s);
 			m.commitHandler(invoiceAllInfo, s);
-			//AnlynasResult result = new AnlynasResult();
-			//ResultArray = result.handle(infosArray);
+			AnlynasResult result = new AnlynasResult();
+			ResultArray = result.handle(infosArray);
 		}
+		
+		if(ResultArray[0] == "001")
+		{
+			S.SendCAPTCHA(out, "发票为真");
+		}
+		
 		return ResultArray;
 	}
 
@@ -200,51 +206,12 @@ public class SocketOperate extends Thread implements Runnable{
 	private String[] doOCRInvoice(String invoicePicFilename) throws InterruptedException, IOException {
 		String invoiceInfo[] = new String[20];
 		
-		//new SoundBinImage().releaseSound(invoicePicFilename,invoiceDir+"binPic"+invoicePicNum+".png",120);//png识别准确度更高
-		
-		//方案一：调用opencv库，动态定位发票信息
+		//调用opencv库，动态定位发票信息
 		System.loadLibrary("JavaInvokeCpp");
 		JavaInvokeCpp mytest = new JavaInvokeCpp();
-		//mytest.getInfoUsingOpencv(invoiceDir+"binPic"+invoicePicNum+".png");
 		mytest.getInfoUsingOpencv(invoicePicFilename);
 		
-		//方案二：直接定位发票信息，用于测试
-        //OperateImage oCode = new OperateImage(335,75,300,50);//发票代码
-        //System.out.println("OperateImage 1 OK");
-        /*try {
-	        oCode.setSrcpath(invoicePicFilename);
-	        oCode.setSubpath( invoiceDir+"code"+invoicePicNum+".jpg");
-	        System.out.println("OperateImage 1.5 OK");
-	        oCode.cut();
-	        System.out.println("cut code 2 OK");
-	        //OperateImage oNumber = new OperateImage(1550,120,200,30);//发票号码
-	        OperateImage oNumber = new OperateImage(1350,70,200,50);//发票号码
-	        oNumber.setSrcpath(invoicePicFilename);
-	        oNumber.setSubpath(invoiceDir+"number"+invoicePicNum+".jpg");
-	        System.out.println("OperateImage 2.5 OK");
-	        oNumber.cut();
-	        System.out.println("OperateImage 3 OK");
-	        
-	        OperateImage oCheckCode = new OperateImage(642,180,130,40); //发票校验码
-	        oCheckCode.setSrcpath(invoicePicFilename);
-	        oCheckCode.setSubpath(invoiceDir+"checkcode"+invoicePicNum+".jpg");
-	        System.out.println("Checkcode ok");
-	        oCheckCode.cut();
-	        
-	        OperateImage oDate = new OperateImage(1500,160,260,50); //开票日期
-	        oDate.setSrcpath(invoicePicFilename);
-	        oDate.setSubpath(invoiceDir+"date"+invoicePicNum+".jpg");
-	        System.out.println("date ok");
-	        oDate.cut();
-        } catch (IOException e) {
-			e.printStackTrace();
-		} */
 		//过滤背景色及图像二值化
-        /*new SoundBinImage().releaseSound(invoiceDir+"code"+invoicePicNum+".jpg",invoiceDir+"bincode"+invoicePicNum+".png",120);
-        new SoundBinImage().releaseSound(invoiceDir+"number"+invoicePicNum+".jpg",invoiceDir+"binnumber"+invoicePicNum+".png",150);//png识别准确度更高
-        new SoundBinImage().releaseSound(invoiceDir+"checkcode"+invoicePicNum+".jpg",invoiceDir+"bincheckcode"+invoicePicNum+".png",200);//png识别准确度更高
-        new SoundBinImage().releaseSound(invoiceDir+"date"+invoicePicNum+".jpg",invoiceDir+"bindate"+invoicePicNum+".png",220);//png识别准确度更高
-        */
         new SoundBinImage().releaseSound(cutImageDir+"daima.jpg",invoiceDir+"bincode"+invoicePicNum+".png",120);
         new SoundBinImage().releaseSound(cutImageDir+"bianhao.jpg",invoiceDir+"binnumber"+invoicePicNum+".png",150);//png识别准确度更高
         new SoundBinImage().releaseSound(cutImageDir+"xiaoyanma4.jpg",invoiceDir+"bincheckcode1"+invoicePicNum+".png",215);//png识别准确度更高

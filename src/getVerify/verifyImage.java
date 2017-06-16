@@ -20,33 +20,25 @@ public class verifyImage implements IGetForInvoiceType {
     private VerficationCodeInfo verficationCodeInfo;
 
     //进行发票真伪验证
-	//public String[] commitHandler(String[] invoiceAllInfo, String verifyCode) {
-    public void commitHandler(String[] invoiceAllInfo, String verifyCode) {
-        logger.info("[INFO]========== enter commit handler");
+	public String[] commitHandler(String[] invoiceAllInfo, String verifyCode) {
         // check not null
         if (verficationCodeInfo == null){
-        	//logger.info("[INFO]=========verifycationCodeInfo is empty");
-        	return;
+        	return null;
         }
         if (verifyCode == null) {
-        	//logger.info("[INFO]=========verifyCode is empty");
-        	return;
+        	return null;
         }
         if (invoiceAllInfo[0] == null) {
-        	//logger.info("[INFO]=========invoiceAllInfo[0] is empty");
-        	return;
+        	return null;
         }
         if (invoiceAllInfo[2] == null){
-        	//logger.info("[INFO]=========invoiceAllInfo[2] is empty");
-        	return;
+        	return null;
         }
         if (invoiceAllInfo[4] == null){
-        	//logger.info("[INFO]=========invoiceAllInfo[4] is empty");
-        	return;
+        	return null;
         }
         if (invoiceAllInfo[8] == null){
-        	//logger.info("[INFO]=========invoiceAllInfo[8] is empty");
-        	return;
+        	return null;
         }
         if (invoiceType == null)
             invoiceType = getForInvoiceType(invoiceAllInfo[2]);
@@ -68,8 +60,7 @@ public class verifyImage implements IGetForInvoiceType {
 
         if (uri == null)
         {
-        	//logger.info("[INFO]==========uri is empty");
-        	return;
+        	return null;
         }
         logger.info("[INFO]==========got url ="+uri);
         //(3)make response handler
@@ -81,7 +72,7 @@ public class verifyImage implements IGetForInvoiceType {
         //(5)InvoiceResult
         InvoiceResult invoiceResult = new InvoiceParase().getInvoiceResult(invoiceInfos);
 
-        /*logger.info("[INFO]========== RESULT");
+        logger.info("[INFO]========== RESULT");
         logger.info("[INFO]========== invoiceInfos1 = "+invoiceInfos.getKey1());
         logger.info("[INFO]========== invoiceInfos2 = "+invoiceInfos.getKey2());
         logger.info("[INFO]========== invoiceInfos3 = "+invoiceInfos.getKey3());
@@ -92,30 +83,17 @@ public class verifyImage implements IGetForInvoiceType {
         logger.info("[INFO]========== invoiceInfos8 = "+invoiceInfos.getKey8());
         logger.info("[INFO]========== invoiceInfos8 = "+invoiceInfos.getKey9());
         logger.info("[INFO]========== invoiceInfos8 = "+invoiceInfos.getKey10());
-        logger.info("getTaxpayerNumber = "+invoiceResult.getTaxpayerNumber());*/
+        logger.info("getTaxpayerNumber = "+invoiceResult.getTaxpayerNumber());
         
-        logger.info("[INFO]========== RESULT");
-        logger.info("[INFO]========== invoiceInfos1 = 001");
-        logger.info("[INFO]========== invoiceInfos2 = 深圳市南山区前海路1068号心语雅园B座1005 13923767170▽26▽20161208▽22030500DK00800▽000000▽ ▽ ▽79508914674032685135▽ ▽-279.0▽▽-284.48▽ ▽电子科技大学▽深圳市南山区国家税务局代开五十五");
-        logger.info("[INFO]========== invoiceInfos3 = 朗□宇□无□刷□电□机□█A2212KV980█个█4█45.6311█182.52█3█5.48");
-        logger.info("[INFO]========== invoiceInfos4 = ");
-        logger.info("[INFO]========== invoiceInfos5 = var fpxx=fpdm+'≡'+fphm+'≡'+swjgmc+'≡'+jsonData.key2+'≡'+yzmSj");
-        logger.info("[INFO]========== invoiceInfos6 = var result= template:0,fplx:fplx,fpxx:fpxx,hwxx:hwxx,jmbz:jmbz,sort:jmsort");
-        logger.info("[INFO]========== invoiceInfos7 = 904e4c73b7d772c04f0f2487e78b787f");
-        logger.info("[INFO]========== invoiceInfos8 = 21dd6b94f26ca076d52770a0f85c5954");
-        logger.info("[INFO]========== invoiceInfos9 =  62661464259f48349753fcf58610202a");
-        logger.info("[INFO]========== invoiceInfos10 = NIuJfyVh3MK3euMa1CfjCaUX0Md/AOmH6TB9BgaL543yFNwSvY55Yu1dunf3r7oN");
-        logger.info("getTaxpayerNumber = 44030500DK00600");
-        
-        /*String[] invoiceInfoArray = new String[3];
+        String[] invoiceInfoArray = new String[3];
         invoiceInfoArray[0] = invoiceInfos.getKey2();
         invoiceInfoArray[1] = invoiceInfos.getKey3();
-        invoiceInfoArray[2] = invoiceResult.getTaxpayerNumber();*/
+        invoiceInfoArray[2] = invoiceResult.getTaxpayerNumber();
 
         //此处我觉得需要将结果返回客户端
         logger.info("[INFO]========== COMMIT FINISHED");
         
-        //return invoiceInfoArray;
+        return invoiceInfoArray;
     }
 
     //获取验证码图片

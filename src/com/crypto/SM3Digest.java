@@ -1,27 +1,5 @@
 package com.crypto;
 
-
-import java.math.BigInteger;
-
-import org.bouncycastle.util.encoders.Hex;  
-
-
-import java.security.SecureRandom;
-import java.util.Arrays;
-
-
-import org.bouncycastle.math.ec.ECCurve;
-import org.bouncycastle.math.ec.ECPoint;
-
-
-import org.bouncycastle.crypto.DerivationFunction;
-import org.bouncycastle.crypto.digests.ShortenedDigest;
-
-import org.bouncycastle.crypto.digests.SHA256Digest;
-    
-import org.bouncycastle.crypto.generators.KDF1BytesGenerator;
-import org.bouncycastle.crypto.params.ISO18033KDFParameters;
-
 public class SM3Digest  
 {  
     /** SM3鍊肩殑闀垮害 */  

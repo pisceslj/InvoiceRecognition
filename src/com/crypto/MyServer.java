@@ -18,6 +18,13 @@ public class MyServer {
 		String str = in.readLine();
 		return str;
 	}
+	
+	public void SendMessage(PrintWriter out,String str)throws Exception
+	{
+		System.out.println(str);
+		SendToClient(out,str);
+	}
+	
 	public void  GetM(BufferedReader in,PrintWriter out,String fileName) throws Exception
 	{
 		String one = nego(in,out);
@@ -57,14 +64,9 @@ public class MyServer {
 		file.close();
 	}
     public String nego(BufferedReader in,PrintWriter out) throws Exception {  
-
-        //while (true)
-        //String ENTLA = "0090";
-        //String ID = "414C494345313233405941484F4F2E434F4D";
         String rstr = "83A2C9C8B96E5AF70BD480B472409A9A327257F1EBB73F5B073354B248668563";
         String dstr = "6FCBA2EF9AE0AB902BC3BDE3FF915D44BA4CC78F88E2F8E7F8996D3B8CCEEDEE";
-        //String xstr = "3099093BF3C137D8FCBBCDF4A2AE50F3B0F216C3122D79425FE03A45DBFE1655";
-        //String ystr = "3DF79E8DAC1CF0ECBAA2F2B49D51A4B387F2EFAF482339086A27A8E05BAED98B";
+        
         Negotiator A = new Negotiator();
         A.Set_Pam(0, rstr,dstr);
         A.Step1_5();
@@ -81,8 +83,6 @@ public class MyServer {
      	SendToClient(out,N.RA.getYCoord().toString());
      	str[1] = in.readLine();
      	N.ECPointEncode(str[0], str[1]);
-    	//System.out.println(str[0]);
-    	//System.out.println(str[1]);
     }
     static void Exchange_S(PrintWriter out,Negotiator N ,BufferedReader in) throws Exception
     {

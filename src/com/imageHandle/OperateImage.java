@@ -12,7 +12,6 @@ import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
-
 public class OperateImage {
     private String srcpath;  //===源图片路径名称如:c:/1.jpg 
     private String subpath;  //===剪切图片存放路径名称.如:c:/2.jpg

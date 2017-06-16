@@ -28,25 +28,6 @@ private static BigInteger a = new BigInteger("787968B4FA32C3FD2417842E73BBFEFF2F
 private static BigInteger b = new BigInteger("63E4C6D3B23B0C849CF84241484BFE48F61D59A5B16BA06E6E12D1DA27C5249A", 16);
 private static BigInteger gx = new BigInteger("421DEBD61B62EAB6746434EBC3CC315E32220B3BADD50BDC4C4E6C147FEDD43D", 16);
 private static BigInteger gy = new BigInteger("0680512BCBB42C07D47349D2153B70C4E5D7FDFCBFA36EA1A85841B9E46E09A2", 16);
-/*
-private static BigInteger n = new BigInteger("FFFFFFFE" + "FFFFFFFF"
-+ "FFFFFFFF" + "FFFFFFFF" + "7203DF6B" + "21C6052B" + "53BBF409"
-+ "39D54123", 16);
-private static BigInteger p = new BigInteger("FFFFFFFE" + "FFFFFFFF"
-+ "FFFFFFFF" + "FFFFFFFF" + "FFFFFFFF" + "00000000" + "FFFFFFFF"
-+ "FFFFFFFF", 16);
-private static BigInteger a = new BigInteger("FFFFFFFE" + "FFFFFFFF"
-+ "FFFFFFFF" + "FFFFFFFF" + "FFFFFFFF" + "00000000" + "FFFFFFFF"
-+ "FFFFFFFC", 16);
-private static BigInteger b = new BigInteger("28E9FA9E" + "9D9F5E34"
-+ "4D5A9E4B" + "CF6509A7" + "F39789F5" + "15AB8F92" + "DDBCBD41"
-+ "4D940E93", 16);
-private static BigInteger gx = new BigInteger("32C4AE2C" + "1F198119"
-+ "5F990446" + "6A39C994" + "8FE30BBF" + "F2660BE1" + "715A4589"
-+ "334C74C7", 16);
-private static BigInteger gy = new BigInteger("BC3736A2" + "F4F6779C"
-+ "59BDCEE3" + "6B692153" + "D0A9877C" + "C62A4740" + "02DF32E5"
-+ "2139F0A0", 16);*/
 
 
 private static SecureRandom random = new SecureRandom();
@@ -113,16 +94,6 @@ byte[] C1Buffer = C1.getEncoded(false);
 System.out.print("C1: ");
 printHexString(C1Buffer);
 
-
-/*
-* 3 鐠侊紕鐣诲顓炴妇閺囪尙鍤庨悙锟� S = [h]Pb * curve濞屸剝婀侀幐鍥х暰娴ｆ瑥娲滅�涙劧绱漢娑撹櫣鈹�
-* 
-* BigInteger h = curve.getCofactor(); System.out.print("h: ");
-* printHexString(h.toByteArray()); if (publicKey != null) { ECPoint
-* result = publicKey.multiply(h); if (!result.isInfinity()) {
-* System.out.println("pass"); } else {
-* System.err.println("鐠侊紕鐣诲顓炴妇閺囪尙鍤庨悙锟� S = [h]Pb婢惰精瑙�"); return null; } }
-*/
 
 
 /* 4 鐠侊紕鐣� [k]PB = (x2, y2) */
@@ -394,19 +365,4 @@ public static String H_256(String s)
     //System.out.println(re.toUpperCase());
     return re;
 }
-/*public static void main(String[] args) {
-
-	String content = "encryption standard";
-	
-	System.out.print("閸樼喎顫愰弫鐗堝祦閿涳拷 ");
-	System.out.println(content);
-	SM02 sm02 = new SM02();
-	SM02KeyPair keyPair = sm02.generateKeyPair("1649AB77A00637BD5E2EFE283FBF353534AA7F7CB89463F208DDBC2920BB0DA0");
-	
-	System.out.println("閸旂姴鐦�");
-	byte[] data = sm02.encrypt(content,keyPair.getPublicKey());
-	System.out.println("鐟欙絽鐦�");
-	String text = sm02.decrypt(data, keyPair.getPrivateKey());
-	System.out.println(text);
-	}*/
 }

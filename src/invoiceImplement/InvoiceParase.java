@@ -112,7 +112,7 @@ public class InvoiceParase implements IInvoiceResult {
         	} else if (sign.equals("007")) {
         		logger.info("[INFO]==========验证码失效!");
         	} else if (sign.equals("008")) {
-        		logger.info("[INFO]==========验证完成!");
+        		logger.info("[INFO]==========验证错误！");
         	} else if (sign.equals("009")) {
         		logger.info("[INFO]==========查无此票");
         	} else if (sign.equals("rqerr")) {
